@@ -1,0 +1,42 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+env:
+  # Disable incremental compilation for faster from-scratch builds
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: rustup update
+    - run: rustup target add wasm32-unknown-unknown
+    - run: cargo build --target wasm32-unknown-unknown --release
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: target/wasm32-unknown-unknown/release/rust_function_template.wasm
+        asset_name: finfunc.wasm
+        tag: b-${{ github.ref_name }}
+        overwrite: true
+        body: "Finfunc release for testing"
+        prerelease: true
+        make_latest: false
+    - name: Upload Manifest
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./manifest.json
+        asset_name: manifest.json
+        tag: b-${{ github.ref_name }}
+        overwrite: true
+        body: "Finfunc release for testing"
+        prerelease: true
+        make_latest: false
