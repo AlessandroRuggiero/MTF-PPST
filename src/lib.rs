@@ -4,7 +4,7 @@ mod ppst;
 mod types;
 
 use exchange_outpost_abi::FunctionArgs;
-use extism_pdk::{FnResult, Json, ToBytes, encoding, plugin_fn};
+use extism_pdk::{FnResult, Json, ToBytes, debug, encoding, plugin_fn};
 use outcomes_matrix::OutcomesMatrix;
 use serde::{Deserialize, Serialize};
 use types::AllowedTimeframe;
@@ -27,7 +27,9 @@ pub struct Output {
 
 #[plugin_fn]
 pub fn run(call_args: FunctionArgs) -> FnResult<Output> {
+    debug!("Started PPST plugin");
     let ppst_configs: Vec<PPSTConfig> = call_args.get_call_argument("ppstConfigs")?;
+    debug!("PPST Configs: {:?}", ppst_configs.len());
     let ppsts: Vec<ppst::PPST> = ppst_configs
         .into_iter()
         .map(|config| {
