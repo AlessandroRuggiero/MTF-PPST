@@ -21,12 +21,14 @@ pub struct PPSTConfig {
 
 #[derive(Serialize, ToBytes)]
 #[encoding(Json)]
-pub struct Output {}
+pub struct Output {
+    outcomes_matrix: OutcomesMatrix,
+}
 
 #[plugin_fn]
 pub fn run(call_args: FunctionArgs) -> FnResult<Output> {
-    let ppstConfigs: Vec<PPSTConfig> = call_args.get_call_argument("ppstConfigs")?;
-    let ppsts: Vec<ppst::PPST> = ppstConfigs
+    let ppst_configs: Vec<PPSTConfig> = call_args.get_call_argument("ppstConfigs")?;
+    let ppsts: Vec<ppst::PPST> = ppst_configs
         .into_iter()
         .map(|config| {
             let candles = call_args
@@ -45,5 +47,5 @@ pub fn run(call_args: FunctionArgs) -> FnResult<Output> {
         .collect();
     let mut outcomes_matrix = OutcomesMatrix::new(ppsts.len());
     outcomes_matrix.apply_strategies(ppsts);
-    Ok(Output {})
+    Ok(Output { outcomes_matrix })
 }

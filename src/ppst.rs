@@ -8,7 +8,7 @@ use crate::{
     types::AllowedTimeframe,
 };
 use exchange_outpost_abi::Candle;
-use extism_pdk::{info, unwrap};
+use extism_pdk::info;
 use serde::Serialize;
 
 #[derive(Debug, PartialEq)]
@@ -20,32 +20,44 @@ pub enum ComputationState {
 #[derive(Serialize)]
 pub struct SignalData {
     index: usize,
-    timestamp: i64,
+    timestamp: i64, // it is the open time of the candle that generated the signal
     price: f64,
     signal_type: SuperTrendSignal,
     trend: Trend,
     signal_line: f64,
 }
-
+#[derive(Serialize)]
 pub struct PPST {
     // Parameters
     pub pivot_point_period: usize,
     pub atr_factor: f64,
     pub atr_period: usize,
-    // State
-    pub computation_state: ComputationState,
-    pub atr_calculator: AtrCalculator,
-    pub center_line: PivotCenterLine,
-    pub supertrend_state: Option<SuperTrendState>,
-    pub signals: Vec<SignalData>,
-    pub last_pivot_high_idx: Option<usize>,
-    pub last_pivot_low_idx: Option<usize>,
-    pub highs: Vec<f64>,
-    pub lows: Vec<f64>,
-    pub closes: Vec<f64>,
-    pub atrs: Vec<f64>,
-    pub candles_trend: BTreeMap<i64, Trend>,
     pub timeframe: AllowedTimeframe,
+    // State (will be ignored in serialization)
+    #[serde(skip)]
+    pub computation_state: ComputationState,
+    #[serde(skip)]
+    pub atr_calculator: AtrCalculator,
+    #[serde(skip)]
+    pub center_line: PivotCenterLine,
+    #[serde(skip)]
+    pub supertrend_state: Option<SuperTrendState>,
+    #[serde(skip)]
+    pub signals: Vec<SignalData>,
+    #[serde(skip)]
+    pub last_pivot_high_idx: Option<usize>,
+    #[serde(skip)]
+    pub last_pivot_low_idx: Option<usize>,
+    #[serde(skip)]
+    pub highs: Vec<f64>,
+    #[serde(skip)]
+    pub lows: Vec<f64>,
+    #[serde(skip)]
+    pub closes: Vec<f64>,
+    #[serde(skip)]
+    pub atrs: Vec<f64>,
+    #[serde(skip)]
+    pub candles_trend: BTreeMap<i64, Trend>,
 }
 
 impl PPST {
