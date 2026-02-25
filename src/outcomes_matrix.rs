@@ -1,4 +1,4 @@
-use extism_pdk::debug;
+use extism_pdk::info;
 use serde::Serialize;
 
 use crate::types::AllowedTimeframe;
@@ -52,7 +52,7 @@ impl OutcomesMatrix {
                             trends[n] = MTFTrend::from_trend(Some(*trend));
                         } else {
                             // This means we would have to look for previous candles than the start of the data
-                            debug!(
+                            info!(
                                 "No trend found for timestamp {} in strategy with timeframe {:?}. This may be due to missing data for higher timeframes. (Its expected)",
                                 timestamp, strategy.timeframe
                             );
@@ -61,6 +61,7 @@ impl OutcomesMatrix {
                     }
                 }
             }
+            self.stategies.push(strategy);
         }
     }
 }
