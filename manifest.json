@@ -37,7 +37,7 @@
                         },
                         "candles_key": {
                             "type": "string",
-                            "description": "Key to fetch candle data for this timeframe"
+                            "description": "Key used in financial data as key for this strategy (the timeframe must match)"
                         }
                     },
                     "required": ["pivot_point_period", "atr_factor", "atr_period", "timeframe", "candles_key"]

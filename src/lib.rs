@@ -9,8 +9,7 @@ use outcomes_matrix::OutcomesMatrix;
 use serde::{Deserialize, Serialize};
 use types::AllowedTimeframe;
 
-#[derive(Deserialize, ToBytes)]
-#[encoding(Json)]
+#[derive(Deserialize)]
 pub struct PPSTConfig {
     pivot_point_period: usize,
     atr_factor: f64,
